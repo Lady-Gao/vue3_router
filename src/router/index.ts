@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type RouteLocationNamedRaw, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory, type RouteLocationNamedRaw, type RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Login from '../views/Login.vue'
 import AboutView from '../views/AboutView.vue'
@@ -27,7 +27,7 @@ const routes = [
   },
 ]
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes
 
 })
@@ -40,7 +40,6 @@ import { useUserStore } from '@/stores/user'
 
 router.beforeEach(async (to, from) => {
   const token = sessionStorage.getItem('token')
-  console.log(to.name,'777')
   if(!token&&to.name !== 'login'){
     return { name: 'login' }
   }
@@ -52,14 +51,19 @@ router.beforeEach(async (to, from) => {
         //存入pinia
         const store=useUserStore()
         store.saveMenu(data)
-        router.push(to)
+         router.push(to)
+        // return '/'
+        // router.replace(router.currentRoute.value.fullPath)
       })
 
     }
   }
 
 })
+router.beforeResolve((to, from) => {
+  console.log('router.beforeResolve')
 
+})
 
 export function resetRouter(callback?: any) {
   //import('@/api/login/data.json')
@@ -71,11 +75,14 @@ export function resetRouter(callback?: any) {
    data.map(item=>{
       myMenu.children.push(item)
     } )
+console.log(data,'data')
     callback&&callback(myMenu,data)
+  
   })
 }
 //递归遍历
 function filterAsyncRouter(asyncRouterMap: any[]) {
+
   asyncRouterMap.map(item => {
     item.path = item.href || ""
     if (item.path != "") {
@@ -87,6 +94,7 @@ function filterAsyncRouter(asyncRouterMap: any[]) {
       item.children = filterAsyncRouter(item.children)
     }
   })
+
   return asyncRouterMap
 }
 
@@ -96,17 +104,16 @@ function filterAsyncRouter(asyncRouterMap: any[]) {
  *
  * 递归为所有有子路由的路由设置第一个children.path为默认路由
  */
-export function setDefaultRoute(routes:any[],fatherR:[]) {
+export function setDefaultRoute(routes:any[]) {
+
  
   routes.map((route) => {
-    if(route.hasChildren=="organize"){
-      return  fatherR.redirect=route.path
-    }
-    if(route.children){
-     return setDefaultRoute(route.children,route)
-    }
-    //&&route.hasChildren=="organize"
+    let c=route.children[0]
+   route.redirect =c.children[0]?.href
    
   })
+  
 }
+
+
 export default router

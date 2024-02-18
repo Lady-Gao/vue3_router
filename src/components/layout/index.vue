@@ -1,17 +1,15 @@
 <template>
-  <div class="layout">
-    <el-menu ellipsis class="el-menu-popper-demo" mode="horizontal"  style="width: 100%" @select="routeTo" :default-active="route.path">
-      <!-- <el-menu-item :index="title.name" v-for="title in Menu">{{title.name}}</el-menu-item> -->
-      <el-sub-menu :index="title.name" v-for="title in Menu">
+  <div class="layout">ss
+    <el-menu    class="el-menu-vertical-demo" mode="horizontal"   @select="routeTo" :default-active="route.path">
+      <el-sub-menu :index="title.name" v-for="title in Menu" >
       <template #title>{{title.name}}</template>
-      <el-menu-item  v-for="sec in title.children">
-        <el-sub-menu :index="sec.name">
+  
+      <el-sub-menu  :index="sec.name" v-for="sec in title.children" >
         <template #title>{{ sec.name }}</template>
-        <el-menu-item :index="path.path" v-for="path in sec.children">{{path.path}}</el-menu-item>
-      </el-sub-menu>
-      </el-menu-item>
-     
+        <el-menu-item :index="path.path" v-for="path in sec.children" >{{path.name}}</el-menu-item>
+      </el-sub-menu> 
     </el-sub-menu>
+
     </el-menu>
     <router-view v-slot="{ Component }">
       <transition>
@@ -41,4 +39,6 @@ onMounted(()=>{
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style  >
+
+</style>

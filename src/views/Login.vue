@@ -12,6 +12,7 @@ import { useRouter } from 'vue-router';
 import { loginApi } from '@/api/login';
 import { resetRouter } from '@/router';
 const store=useUserStore()
+store.init=false
 const counterS=useCounterStore()
 const router = useRouter()
 // function login(){
